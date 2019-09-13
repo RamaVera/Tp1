@@ -8,6 +8,7 @@ Ir a la carpeta donde desean tener el repositorio.
 1) Definir Usuario y email(opcional)
 
 git config --global user.name "John Doe"
+
 git config --global user.email johndoe@example.com
 
 (Esto se hace una vez y nunca mas. La idea es que cada vez que suban va a aparecer que lo subio ese usuario)
@@ -69,6 +70,10 @@ Por ultimo se usa el push. Como primera y UNICA vez si uno esta en un branch o e
 git push -u origin nombre_del_branch
 
 Despues de eso simplemente se usa el git push
+
+8) Pueden ver como se crea el arbol en github.
+
+Desde github dentro del repo busquen la pestaña Insigth y despues la opcion Network y flasheeen!! ajajaj
 
 Cualquier duda pregunten.
 
