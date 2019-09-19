@@ -13,7 +13,7 @@ La secuencia de funciones invocadas para el proyecto gpio_blinky_02 es la que se
 /firmware_v2/projects/Tp1/gpio_02_blinky/src/blinky.c
  La misma consiste en una función que inicializa la placa, boardConfig() y luego posee en un loop infinito en el que se llama básicamente a dos funciones gpioWrite() y delay(). Dentro del loop las funciones gpioWrite() siempre utilizan el macro LEDB y van variando el estado del led en prendido y apagado. La función delay tiene harcodeado 500 que simboliza 500ms (medio segundo) en donde el sistema esperara dicho tiempo para continuar la ejecución. El código integral al ejecutarlo prendera y apagara un led cada medio segundo.
  
-![alt text] (Images/1.8_1.PNG)
+![alt text] (Images\1.8_1.PNG)
 
 Fig. 1 -  Estructura del Main()
 
@@ -22,7 +22,7 @@ BoardConfig() es una función importante en cada proyecto de embebidos. Se encue
 /firmware_v2/modules/lpc4337_m4/sapi/src/sapi_board.c
 Como se observa en la fig. 2 posee funciones en donde configura el Clock interno del core SystemCoreClockUpdate() y cyclesCounterConfig() , tambien inicializa perifericos con Board_init() y luego inicializa las entradas y salidas de propósito general (GPIO) utilizando la función gpioConfig(), la cual necesita de macros para definir como es configurado el pin.
  
-![alt text] (Images/1.8_2.PNG)
+![alt text] (Images\1.8_2.PNG)
 Fig. 2 
 
 1.1.	SystemCoreClockUpdate
@@ -34,7 +34,7 @@ Posee como argumento de entrada un tipo enumerativo definido junto a otros en :
 /firmware_v2/modules/lpc4337_m4/chip/inc/chip_clocks.h
 Dicho tipo enumerativo junto con la función Chip_Clock_GetRate() obtienen la frecuencia de clock del micro.  A pesar que la salida de la función sea void, SystemCoreClock es una variable GLOBAL por lo que aquellas funciones que estén en su alcance podrán usarla.
 
-![alt text] (Images/1.8_3.PNG)
+![alt text] (Images\1.8_3.PNG)
 
 1.2.	Board_Init()
 
@@ -42,17 +42,17 @@ Board_Init() es una función que agrupa la inicialización de distintos perifér
 /firmware_v2/modules/lpc4337_m4/board/src/board.c
  A priori cada pin del micro puede tener varios tipos de funcionamientos y es en esta función donde se dice cual de todas es la función del pin.
  
-![alt text] (Images/1.8_4.PNG)
+![alt text] (Images\1.8_4.PNG)
 
 1.3.	gpioConfig()
 gpioConfig
-![alt text] (Images/1.8_5.PNG)
+![alt text] (Images\1.8_5.PNG)
  
 2.	gpioWrite() 
 
-![alt text] (Images/1.8_6.PNG)
+![alt text] (Images\1.8_6.PNG)
 3.	delay()
 
-![alt text] (Images/1.8_7.PNG)
+![alt text] (Images\1.8_7.PNG)
 
  
