@@ -46,9 +46,15 @@
 
 ///////////////////////////////////////////////////////////////////
 //#define DONT_RESET_ON_RESTART
-//DEBUG_PRINT_ENABLE;
 
-#define TP1_4
+
+#define TP1_2
+
+#ifdef TP1_5
+	DEBUG_PRINT_ENABLE
+#elif TP1_6
+	DEBUG_PRINT_ENABLE
+#endif
 
 
 #define TICKRATE_1MS	(1)				/* 1000 ticks per second */
@@ -62,8 +68,11 @@
 #define LED_TOGGLE_100MS	(100)
 #define LED_TOGGLE_500MS	(500)
 #define LED_TOGGLE_1000MS   (1000)
+
+#define LED_TOGGLE_MS   LED_TOGGLE_500MS
+
 // PRECONDICION: LED_TOGGLE_CICLE DEBE SER ENTERO
-#define LED_TOGGLE_CICLE LED_TOGGLE_500MS/TICKRATE_MS // 100ms/50ms=2 ciclos
+#define LED_TOGGLE_CICLE LED_TOGGLE_MS/TICKRATE_MS // 100ms/50ms=2 ciclos
 
 
 #define BUTTON_STATUS_10MS	(10)
@@ -75,6 +84,7 @@
 volatile bool LED_Time_Flag = false;
 volatile bool BUTTON_Status_Flag = false;
 volatile bool BUTTON_Time_Flag = false;
+
 
 /*Prototipo de myTickHook, declarada al final*/
 void myTickHook( void *ptr );
@@ -225,11 +235,49 @@ int main(void){
 		   }
 	#endif
 ///////////////////////////////////////////////////////////////////
-	#ifdef TP1_5 //Envío de mensajes de depuración por puerto serie
-/*  Aca va el codigo del inciso 5 del TP1
- *
- *
- */
+	#ifdef TP1_5
+
+	 /* ------------- INICIALIZACIONES ------------- */
+	uint32_t LED_Toggle_Counter = 0;
+
+	/* Inicializar la placa */
+	boardConfig();
+
+	/* UART for debug messages. */
+	debugPrintConfigUart( UART_USB, 115200 );
+	debugPrintString( "DEBUG c/sAPI\r\n" );
+
+	/* Inicializar el conteo de Ticks con resolucion de 1ms (se ejecuta
+       periodicamente una interrupcion cada TICKRATE_MS que incrementa un contador de
+       Ticks obteniendose una base de tiempos). */
+	tickConfig( TICKRATE_MS );
+
+	/* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
+       simplemente una funcion que se ejecutara peri odicamente con cada
+       interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
+       a una interrupcion.
+       El segundo parametro es el parametro que recibe la funcion myTickHook
+       al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
+	*/
+	tickCallbackSet( myTickHook, (void*)NULL );
+
+	/* ------------- REPETIR POR SIEMPRE ------------- */
+	while(1) {
+		__WFI();
+
+		if (LED_Time_Flag == true) {
+			LED_Time_Flag = false;
+
+			if (LED_Toggle_Counter == 0) {
+				LED_Toggle_Counter = LED_TOGGLE_MS;
+				gpioToggle(LED3);
+				debugPrintString( "LED Toggle\n" );
+			}
+			else
+				LED_Toggle_Counter--;
+		}
+	}
+
 	#endif
 ///////////////////////////////////////////////////////////////////
 	#ifdef TP1_6 //Puerto serie + Push Buttons
@@ -343,7 +391,11 @@ void myTickHook( void *ptr ){
 
 	#endif
 
-    #ifdef TP1_6
+	#ifdef TP1_5
+	   LED_Time_Flag = true;
+	#endif
+
+	#ifdef TP1_6
 
 		LED_Time_Flag = true;
 		BUTTON_Time_Flag = true;
