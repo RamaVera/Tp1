@@ -1,0 +1,13 @@
+Tp1Build.c es la version sin errores y que buildea correctamente de Tp1.c.
+Para builder el proyecto deben modificar el archivo proyect.mk que esta en firmware_v2 y escribir en alguna parte
+
+PROJECT = projects/Tp1
+
+Si buildeo exitosamente deberia generar un .axf en la carpeta de objetos y ese archivo debe
+cargarse al debug para que se cargue en la placa
+
+
+El otro archivo me tiraba muchos errores de buildeo, multiples definiciones de main por lo 
+que arme un solo main y por dentro los condicionales, no me funcionaba #if y lo reemplace 
+por #ifdef, me decia algo asi como que habia un problema circular por que estaba en una carpeta 
+que tenia el mismo nombre que la padre asi que por eso tuve que cambiar la estructura de directorio
