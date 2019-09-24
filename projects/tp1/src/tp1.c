@@ -171,10 +171,74 @@ int main(void){
 ///////////////////////////////////////////////////////////////////
 #if (TEST == TP1_5)
 
- /*  Aca va el codigo del inciso 5 del TP1
-  *
-  *
-  */
+#include "sapi.h"         
+
+DEBUG_PRINT_ENABLE;
+
+#define TICKRATE_1MS	(1)				/* 1000 ticks per second */
+#define TICKRATE_10MS	(10)			/* 100 ticks per second */
+
+#define LED_TOGGLE_100MS	(100)
+#define LED_TOGGLE_500MS	(500)
+#define LED_TOGGLE_1000MS	(1000)
+
+volatile bool LED_Time_Flag = false;
+
+
+/* FUNCION que se ejecuta cada vez que ocurre un Tick. */
+void myTickHook( void *ptr ) {
+	LED_Time_Flag = true;
+}
+
+
+/* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
+int main(void) {
+
+	/* ------------- INICIALIZACIONES ------------- */
+	uint32_t LED_Toggle_Counter = 0;
+
+	/* Inicializar la placa */
+	boardConfig();
+
+	/* UART for debug messages. */
+	debugPrintConfigUart( UART_USB, 115200 );
+	debugPrintString( "DEBUG c/sAPI\r\n" );
+
+	/* Inicializar el conteo de Ticks con resolucion de 1ms (se ejecuta
+       periodicamente una interrupcion cada TICKRATE_MS que incrementa un contador de
+       Ticks obteniendose una base de tiempos). */
+	tickConfig( TICKRATE_MS );
+
+	/* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
+       simplemente una funcion que se ejecutara peri odicamente con cada
+       interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
+       a una interrupcion.
+       El segundo parametro es el parametro que recibe la funcion myTickHook
+       al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
+	*/
+	tickCallbackSet( myTickHook, (void*)NULL );
+
+	/* ------------- REPETIR POR SIEMPRE ------------- */
+	while(1) {
+		__WFI();
+
+		if (LED_Time_Flag == true) {
+			LED_Time_Flag = false;
+
+			if (LED_Toggle_Counter == 0) {
+				LED_Toggle_Counter = LED_TOGGLE_MS;
+				gpioToggle(LED3);
+				debugPrintString( "LED Toggle\n" );
+			}
+			else
+				LED_Toggle_Counter--;
+		}
+	}
+
+	/* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+       por ningun S.O. */
+	return 0 ;
+}
 
 #endif
 
