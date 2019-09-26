@@ -48,11 +48,12 @@
 //#define DONT_RESET_ON_RESTART
 
 
-#define TP1_2
+#define TP1_5
 
 #ifdef TP1_5
 	DEBUG_PRINT_ENABLE
-#elif TP1_6
+#endif
+#ifdef TP1_6
 	DEBUG_PRINT_ENABLE
 #endif
 
@@ -69,7 +70,7 @@
 #define LED_TOGGLE_500MS	(500)
 #define LED_TOGGLE_1000MS   (1000)
 
-#define LED_TOGGLE_MS   LED_TOGGLE_500MS
+#define LED_TOGGLE_MS   LED_TOGGLE_100MS
 
 // PRECONDICION: LED_TOGGLE_CICLE DEBE SER ENTERO
 #define LED_TOGGLE_CICLE LED_TOGGLE_MS/TICKRATE_MS // 100ms/50ms=2 ciclos
@@ -269,7 +270,7 @@ int main(void){
 			LED_Time_Flag = false;
 
 			if (LED_Toggle_Counter == 0) {
-				LED_Toggle_Counter = LED_TOGGLE_MS;
+				LED_Toggle_Counter = LED_TOGGLE_CICLE;
 				gpioToggle(LED3);
 				debugPrintString( "LED Toggle\n" );
 			}
